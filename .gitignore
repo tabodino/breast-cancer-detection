@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env
+.venv
+env/
+
+# Poetry
+.poetry/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Pytest
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Output folder
+output/
+
+# Logs
+logs/
+*.log
+
+# Data
+data/
+
+# MLFlow
+mlruns/
+mlflow_artifacts/
+experiments/
+tensorboard_logs/
+checkpoints/
