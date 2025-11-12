@@ -1,7 +1,10 @@
 """Application configuration."""
 
 from pathlib import Path
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+load_dotenv()
 
 
 class Settings(BaseSettings):
@@ -29,6 +32,12 @@ class Settings(BaseSettings):
     raw_data_dir: Path = data_dir / "raw"
     processed_data_dir: Path = data_dir / "processed"
     logs_dir: Path = Path("logs")
+
+    # Dataset url
+    dataset_url: str = (
+        "https://data.mendeley.com/public-files/datasets/k4t7msnt3y/files/"
+        "f0bf474c-91cf-4db7-85b0-2273569a7b59/file_downloaded"
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
