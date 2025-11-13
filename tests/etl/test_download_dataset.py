@@ -2,9 +2,8 @@ import pytest
 import types
 import zipfile
 from unittest.mock import Mock, patch
-from src.etl.download_dataset import (
-    download_file, extract_zip, cleanup_raw_folder
-)
+from src.etl.download_dataset import download_file, extract_zip, cleanup_raw_folder
+
 
 @pytest.fixture
 def temp_dir(tmp_path):
@@ -20,23 +19,31 @@ def test_download_file(monkeypatch, temp_dir):
 
     class FakeResponse:
         def __init__(self):
-            self.headers = {'content-length': '6'}
-            self._data = [b'abc', b'def']
+            self.headers = {"content-length": "6"}
+            self._data = [b"abc", b"def"]
+
         def raise_for_status(self):
             pass
 
-
         def iter_content(self, size):
             return self._data
+
     # Monkeypatch requests.get
     monkeypatch.setattr("requests.get", lambda *a, **kw: FakeResponse())
     # Monkeypatch tqdm to identity contextmanager
-    monkeypatch.setattr("tqdm.tqdm", lambda *a, **kw: types.SimpleNamespace(__enter__=lambda s: s, __exit__=lambda s, e, f, g: None, update=lambda x: None))
-    
+    monkeypatch.setattr(
+        "tqdm.tqdm",
+        lambda *a, **kw: types.SimpleNamespace(
+            __enter__=lambda s: s,
+            __exit__=lambda s, e, f, g: None,
+            update=lambda x: None,
+        ),
+    )
+
     # The loguru logger is already used globally; outputs to stdout, but does not interfere
     download_file(url, dest)
     assert dest.exists()
-    assert dest.read_bytes() == b'abcdef'
+    assert dest.read_bytes() == b"abcdef"
 
 
 def test_extract_zip(temp_dir):
@@ -45,7 +52,7 @@ def test_extract_zip(temp_dir):
     extract_to = temp_dir / "extracted"
     extract_to.mkdir()
     inside_file = "data.txt"
-    with zipfile.ZipFile(zip_path, 'w') as z:
+    with zipfile.ZipFile(zip_path, "w") as z:
         z.writestr(inside_file, "hello world")
     extract_zip(zip_path, extract_to)
     assert (extract_to / inside_file).exists()
@@ -55,7 +62,7 @@ def test_extract_zip(temp_dir):
 def test_cleanup_raw_folder_with_mocks():
     fake_path = Mock()
     fake_zip = Mock()
-  
+
     fake_zip.exists.return_value = True
 
     fake_subdir = Mock()
