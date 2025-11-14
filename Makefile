@@ -1,4 +1,4 @@
-.PHONY: test test-cov pylint lint format etl index-images preprocess-images help
+.PHONY: test test-cov pylint lint format etl index-images preprocess-images train evaluate mlflow-ui help
 
 test:
 	uv run pytest tests/ -v
@@ -31,12 +31,29 @@ preprocess-images:
 	@echo "Preprocess split images..."
 	uv run python -m src.etl.preprocess_images_split
 
+train:
+	@echo "Training models with MLflow..."
+	uv run python -m src.models.training
+
+evaluate:
+	@echo "Evaluating models..."
+	uv run python -m src.evaluation.metrics
+
+mlflow-ui:
+	@echo "Launch MLflow UI..."
+	uv run mlflow ui	
+
 help:
 	@echo "Available commands:"
 	@echo "Execution:"
 	@echo "  make etl               - Download and extract images dataset"
 	@echo "  make index-images      - Index images in the raw data directory"
 	@echo "  make preprocess-images - Preprocess indexed images (resize, normalize)"
+	@echo ""
+	@echo "Training and Evaluation:"
+	@echo "  make train             - Train models with MLflow"
+	@echo "  make evaluate          - Evaluate trained models"
+	@echo "  make mlflow-ui         - Launch MLflow UI"
 	@echo ""
 	@echo "Tests:"
 	@echo "  make test              - Run tests"
