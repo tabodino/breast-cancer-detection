@@ -1,4 +1,4 @@
-.PHONY: test test-cov pylint lint format etl index-images preprocess-images train evaluate mlflow-ui help
+.PHONY: test test-cov pylint lint format etl index-images preprocess-images train evaluate serve mlflow-ui streamlit help
 
 test:
 	uv run pytest tests/ -v
@@ -39,9 +39,17 @@ evaluate:
 	@echo "Evaluating models..."
 	uv run python -m src.evaluation.metrics
 
+serve:
+	@echo "Starting FastAPI server..."
+	uv run uvicorn src.api.main:app --reload
+
 mlflow-ui:
 	@echo "Launch MLflow UI..."
-	uv run mlflow ui	
+	uv run mlflow ui
+
+streamlit:
+	@echo "Starting Streamlit UI..."
+	streamlit run src/streamlit/app.py --server.port=8501
 
 help:
 	@echo "Available commands:"
@@ -53,7 +61,11 @@ help:
 	@echo "Training and Evaluation:"
 	@echo "  make train             - Train models with MLflow"
 	@echo "  make evaluate          - Evaluate trained models"
+	@echo ""
+	@echo "Serving:"
+	@echo "  make serve             - Start FastAPI server"
 	@echo "  make mlflow-ui         - Launch MLflow UI"
+	@echo "  make streamlit         - Run Streamlit UI"
 	@echo ""
 	@echo "Tests:"
 	@echo "  make test              - Run tests"

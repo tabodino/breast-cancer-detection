@@ -19,3 +19,9 @@ Data Scientist | Full-Stack Developer
 - 🌐 Portfolio: [github.com/tabodino](https://github.com/tabodino)
 - 💼 LinkedIn: [linkedin.com/in/jean-michel-lievin-247591143](https://www.linkedin.com/in/jean-michel-lievin-247591143)
 - 📧 Email: [jeanmichel.liev1@gmail.com](mailto:jeanmichel.liev1@gmail.com)
+
+---
+
+## 🛠️ Support
+
+For issues and questions, open an issue on GitHub.
