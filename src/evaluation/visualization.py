@@ -3,13 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
 from typing import Dict, List
-from sklearn.metrics import (
-    confusion_matrix,
-    roc_curve,
-    auc,
-    precision_recall_curve
-)
-from src.logger import logger
+from sklearn.metrics import confusion_matrix, roc_curve, auc, precision_recall_curve
+from loguru import logger
 from src.config import get_settings
 
 

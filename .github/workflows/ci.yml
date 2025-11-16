@@ -1,0 +1,35 @@
+name: CI - Breast Cancer Detection
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv and ruff
+        run: pip install uv ruff
+
+      - name: Install project dependencies from pyproject.toml
+        run: uv pip install -r pyproject.toml --all-extras
+
+      - name: Run Ruff linter
+        run: ruff check src/
+
+      - name: Run Ruff formatter
+        run: ruff format src/

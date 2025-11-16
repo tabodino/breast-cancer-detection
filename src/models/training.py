@@ -49,7 +49,7 @@ class ModelTrainer:
         """Create training callbacks."""
 
         model_checkpoint = ModelCheckpoint(
-            settings.models_dir / f"best_model_{run_id}.h5",
+            settings.models_dir / f"best_model_{run_id}.keras",
             monitor="val_accuracy",
             save_best_only=True,
             mode="max",
@@ -130,7 +130,7 @@ class ModelTrainer:
             )
 
             # Save model
-            model_path = settings.models_dir / f"model_{run_id}.h5"
+            model_path = settings.models_dir / f"model_{run_id}.keras"
             self.model.save(model_path)
             mlflow.log_artifact(str(model_path), artifact_path="models")
 

@@ -49,7 +49,7 @@ mlflow-ui:
 
 streamlit:
 	@echo "Starting Streamlit UI..."
-	streamlit run src/streamlit/app.py --server.port=8501
+	uv run streamlit run src/streamlit/app.py --server.port=8501
 
 help:
 	@echo "Available commands:"

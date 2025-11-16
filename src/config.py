@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from src.utils.mlflow_path import get_crossplatform_mlflow_uri
+from src.utils.mlflow_utils import get_crossplatform_mlflow_uri
 
 load_dotenv()
 
@@ -53,13 +53,23 @@ class Settings(BaseSettings):
         "f0bf474c-91cf-4db7-85b0-2273569a7b59/file_downloaded"
     )
 
+    # API Configuration
+    api_host: str = "0.0.0.0"
+    api_port: int = 8000
+
+    # Streamlit Configuration
+    streamlit_server_headless: bool = True
+    streamlit_server_port: int = 8501
+
     # Image Processing
-    iamge_size: tuple = (224, 224)
+    image_size: tuple = (224, 224)
     image_channels: int = 3
+    normalize_mean: list = [0.485, 0.456, 0.406]  # ImageNet defaults
+    normalize_std: list = [0.229, 0.224, 0.225]
 
     # Model Training
     batch_size: int = 32
-    epochs: int = 50
+    epochs: int = 5
     learning_rate: float = 1e-4
     early_stopping_patience: int = 10
     early_stopping_min_delta: float = 1e-4

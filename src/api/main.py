@@ -4,10 +4,11 @@ from contextlib import asynccontextmanager
 from PIL import Image
 import numpy as np
 import tensorflow as tf
-from pathlib import Path
+from datetime import datetime
 import io
 import os
 import logging
+import uvicorn
 from src.config import get_settings
 from src.utils.mlflow_utils import get_latest_run_id
 
@@ -71,7 +72,14 @@ async def predict(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=f"Prediction failed: {str(e)}")
 
 
-if __name__ == "__main__":
-    import uvicorn
+@app.get("/health")
+async def health_check():
+    """Health check endpoint."""
+    return {
+        "status": "healthy",
+        "model_loaded": model is not None,
+        "timestamp": datetime.now().isoformat()
+    }
 
+if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
