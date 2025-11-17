@@ -95,6 +95,61 @@ breast-cancer-detection/
 - Streamlit (for web app interface)
 - TensorFlow, Keras, NumPy, Pandas, etc.
 
+### 🖥️ Setup
+
+#### Using uv
+
+Installing uv (if necessary):
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Create a virtual environment and install dependencies:
+
+```bash
+uv venv
+```
+
+Activate the virtual environment:
+
+On Linux and macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+On Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
+uv pip install -r pyproject.toml
+```
+
+### 🖥️ Setup Environment variables
+
+```bash
+cp env.example .env
+```
+
+Edit ".env" file if needed
+
+---
+
+## ✨ Contributing
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/your-feature`)
+3. Make your changes
+4. Commit your changes (`git commit -am 'Add some feature'`)
+5. Push to the branch (`git push origin feature/your-feature`)
+6. Create a new Pull Request
+
 ---
 
 ## 📄 License

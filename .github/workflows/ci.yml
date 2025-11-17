@@ -2,9 +2,9 @@ name: CI - Breast Cancer Detection
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint-and-format:
@@ -20,10 +20,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
+
+      - name: Cache uv
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/uv
+          key: uv-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            uv-${{ runner.os }}-
 
       - name: Install uv and ruff
         run: pip install uv ruff
+
+      - name: Create uv virtual environment
+        run: uv venv
 
       - name: Install project dependencies from pyproject.toml
         run: uv pip install -r pyproject.toml --all-extras

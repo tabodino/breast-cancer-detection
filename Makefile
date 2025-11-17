@@ -1,4 +1,4 @@
-.PHONY: test test-cov pylint lint format etl index-images preprocess-images train evaluate serve mlflow-ui streamlit help
+.PHONY: test test-cov pylint lint format etl index-images preprocess-images train evaluate serve mlflow-ui streamlit run-all help
 
 test:
 	uv run pytest tests/ -v
@@ -51,6 +51,12 @@ streamlit:
 	@echo "Starting Streamlit UI..."
 	uv run streamlit run src/streamlit/app.py --server.port=8501
 
+run-all:
+	@echo "Starting FastAPI + Streamlit  + MLFlow services..."
+	uv run streamlit run src/streamlit/app.py --server.port=8501 &
+	uv run mlflow ui &
+	uv run uvicorn src.api.main:app --reload
+
 help:
 	@echo "Available commands:"
 	@echo "Execution:"
@@ -66,6 +72,7 @@ help:
 	@echo "  make serve             - Start FastAPI server"
 	@echo "  make mlflow-ui         - Launch MLflow UI"
 	@echo "  make streamlit         - Run Streamlit UI"
+	@echo "  make run-all           - Run all services together"
 	@echo ""
 	@echo "Tests:"
 	@echo "  make test              - Run tests"
