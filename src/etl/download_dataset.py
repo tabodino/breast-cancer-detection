@@ -47,7 +47,7 @@ def cleanup_raw_folder(zip_path: str):
         logger.success("Cleanup of raw directory complete.")
 
 
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
     settings.raw_data_dir.mkdir(parents=True, exist_ok=True)
     zip_path = settings.raw_data_dir / "mendeley.zip"
     download_file(settings.dataset_url, zip_path)

@@ -1,7 +1,8 @@
-version: '3.8'
-
 services:
   mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
     image: breast-cancer-detection:latest
     ports:
       - "5000:5000"
@@ -10,8 +11,14 @@ services:
     volumes:
       - mlruns_data:/mlruns
       - data:/app/data
-    command: mlflow ui --backend-store-uri file:///mlruns --host 0.0.0.0 --port 5000
-
+    command: >
+      mlflow ui --backend-store-uri file:///mlruns 
+      --host 0.0.0.0 --port 5000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
   api:
     image: breast-cancer-detection:latest
     ports:
@@ -25,8 +32,13 @@ services:
       - ./models:/app/models
     depends_on:
       - mlflow
-    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
-
+    command: > 
+      uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
   streamlit:
     image: breast-cancer-detection:latest
     ports:
@@ -38,8 +50,14 @@ services:
       - data:/app/data
       - ./models:/app/models
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     command: streamlit run src/streamlit/app.py --server.port 8501 --server.headless true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   mlruns_data:

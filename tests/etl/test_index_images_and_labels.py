@@ -14,9 +14,7 @@ def test_index_images_and_labels(tmp_path):
 
     # Label files : one with label, one without
     label_file = labels_dir / "img1.txt"
-    label_file.write_text(
-        "1 0.5 0.5 1.0 1.0\n2 0.1 0.1 0.2 0.2"
-    )
+    label_file.write_text("1 0.5 0.5 1.0 1.0\n2 0.1 0.1 0.2 0.2")
     label_file2 = labels_dir / "img2.txt"
     label_file2.write_text("")
 

@@ -57,6 +57,18 @@ run-all:
 	uv run mlflow ui &
 	uv run uvicorn src.api.main:app --reload
 
+docker-up:
+	docker-compose up -d
+
+docker-down:
+	docker-compose down
+
+docker-logs:
+	docker-compose logs -f
+
+docker-build:
+	docker-compose build
+
 help:
 	@echo "Available commands:"
 	@echo "Execution:"
@@ -83,3 +95,8 @@ help:
 	@echo "  make format            - Format the code with ruff"
 	@echo "  make pylint            - Lint the code with pylint"
 	@echo ""
+	@echo "Docker:"
+	@echo "  make docker-up    		- Start Docker services"
+	@echo "  make docker-down  		- Stop Docker services"
+	@echo "  make docker-logs  		- See Docker logs"
+	@echo "  make docker-build 		- Build Docker images"

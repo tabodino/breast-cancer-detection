@@ -1,12 +1,10 @@
-FROM python:3.12-slim
+FROM python:3.12-slim AS base
 
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libopencv-dev \
-    python3-opencv \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -14,13 +12,15 @@ RUN apt-get update && apt-get install -y \
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
-COPY . .
+COPY pyproject.toml ./
 
 # Install dependencies
 RUN uv pip install --system -e .
+
+COPY . .
 
 # Expose ports
 EXPOSE 8000 8501 5000
 
 # Default command
-CMD ["bash", "-c", "mlflow ui --backend-store-uri file:./mlruns & uvicorn src.api.main:app --host 0.0.0.0 --port 8000 & streamlit run src/streamlit/app.py"]
+CMD ["bash"]

@@ -78,8 +78,9 @@ async def health_check():
     return {
         "status": "healthy",
         "model_loaded": model is not None,
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
     }
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

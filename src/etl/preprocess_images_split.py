@@ -31,7 +31,7 @@ def preprocess_split(index_csv: Path, out_x: Path, out_y: Path, img_size=(224, 2
     return X, y
 
 
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
     splits = ["train", "valid", "test"]
     for split in splits:
         preprocess_split(

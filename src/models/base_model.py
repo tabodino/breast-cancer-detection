@@ -68,6 +68,20 @@ class BaseModel(ABC):
         """Print model summary."""
         return self.get_model().summary()
 
+    def _build_output_layer(self, x):
+        """Build output layer based on num_classes.
+
+        Args:
+            x: Input tensor from previous layer
+
+        Returns:
+            Output tensor with appropriate activation
+        """
+        if self.num_classes == 1:
+            return layers.Dense(1, activation="sigmoid")(x)
+        else:
+            return layers.Dense(self.num_classes, activation="softmax")(x)
+
 
 class CNNModel(BaseModel):
     """A simple Convolutional Neural Network model."""
@@ -85,7 +99,8 @@ class CNNModel(BaseModel):
         x = layers.Flatten()(x)
         x = layers.Dense(128, activation="relu")(x)
         x = layers.Dropout(0.25)(x)
-        outputs = layers.Dense(1, activation="sigmoid")(x)
+
+        outputs = self._build_output_layer(x)
 
         model = keras.Model(inputs=inputs, outputs=outputs, name=self.name)
         return model
@@ -128,7 +143,7 @@ class EfficientNetB3Model(BaseModel):
         x = layers.Dropout(0.3)(x)
 
         # Output layer
-        outputs = layers.Dense(1, activation="sigmoid")(x)
+        outputs = self._build_output_layer(x)
 
         model = keras.Model(inputs=inputs, outputs=outputs, name=self.name)
 
@@ -159,7 +174,8 @@ class ResNet50Model(BaseModel):
         x = layers.Dropout(0.4)(x)
         x = layers.Dense(256, activation="relu")(x)
         x = layers.Dropout(0.3)(x)
-        outputs = layers.Dense(1, activation="sigmoid")(x)
+
+        outputs = self._build_output_layer(x)
 
         model = keras.Model(inputs=inputs, outputs=outputs, name=self.name)
 
@@ -188,7 +204,8 @@ class MobileNetV3Model(BaseModel):
         x = layers.Dropout(0.3)(x)
         x = layers.Dense(128, activation="relu")(x)
         x = layers.Dropout(0.2)(x)
-        outputs = layers.Dense(1, activation="sigmoid")(x)
+
+        outputs = self._build_output_layer(x)
 
         model = keras.Model(inputs=inputs, outputs=outputs, name=self.name)
 
@@ -240,7 +257,8 @@ class UNetModel(BaseModel):
         gap = layers.GlobalAveragePooling2D()(c7)
         dense = layers.Dense(128, activation="relu")(gap)
         dense = layers.Dropout(0.5)(dense)
-        outputs = layers.Dense(1, activation="sigmoid")(dense)
+
+        outputs = self._build_output_layer(dense)
 
         model = keras.Model(inputs=inputs, outputs=outputs, name=self.name)
 

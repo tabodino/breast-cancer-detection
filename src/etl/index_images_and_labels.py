@@ -23,7 +23,7 @@ def index_images_and_labels(images_dir: Path, labels_dir: Path, out_csv: Path):
     return df
 
 
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
     splits = ["train", "valid", "test"]
     for split in splits:
         index_images_and_labels(

@@ -1,11 +1,9 @@
 import streamlit as st
 import numpy as np
 import cv2
-from pathlib import Path
 from PIL import Image
 import tensorflow as tf
 import json
-from datetime import datetime
 
 import sys
 from pathlib import Path
@@ -15,8 +13,6 @@ sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 
 from src.config import get_settings
 from src.etl.data_loader import ImagePreprocessor
-from src.evaluation.metrics import ModelEvaluator
-from src.evaluation.visualization import MetricsVisualizer
 from loguru import logger
 
 

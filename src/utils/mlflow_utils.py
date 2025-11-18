@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional
 
 
 def get_crossplatform_mlflow_uri(folder: str = "mlruns") -> str:
@@ -14,7 +14,7 @@ def get_crossplatform_mlflow_uri(folder: str = "mlruns") -> str:
     return uri
 
 
-def get_latest_run_id(models_dir: Path = Path("models")) -> Optional[Tuple[str, str]]:
+def get_latest_run_id(models_dir: Path = Path("models")) -> Optional[str]:
     """Get latest saved model Path and run_id."""
     files = sorted(
         models_dir.glob("best_model_*.keras"),
