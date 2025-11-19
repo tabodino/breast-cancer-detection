@@ -1,0 +1,7 @@
+[core]
+    remote = storage
+    autostage = true
+['remote "myremote"']
+    url = cache
+['remote "storage"']
+    url = s3://your-bucket-name/breast-cancer-detection
