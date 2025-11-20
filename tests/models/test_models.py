@@ -19,6 +19,13 @@ from src.models.base_model import (
     get_model,
 )
 from src.models.training import ModelTrainer
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    category=DeprecationWarning,
+    module="keras.src.backend.tensorflow.core",
+)
 
 
 class TestBaseModel:

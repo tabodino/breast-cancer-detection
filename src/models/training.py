@@ -1,7 +1,11 @@
 from typing import Dict
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
+from tensorflow.keras.callbacks import (
+    EarlyStopping,
+    ReduceLROnPlateau,
+    ModelCheckpoint,
+)
 import mlflow
 from loguru import logger
 from src.config import get_settings
@@ -130,7 +134,8 @@ class ModelTrainer:
             )
 
             # Save model
-            model_path = settings.models_dir / f"model_{run_id}.keras"
+            model_filename = f"model_{self.model_name}_{run_id}.keras"
+            model_path = settings.models_dir / model_filename
             self.model.save(model_path)
             mlflow.log_artifact(str(model_path), artifact_path="models")
 

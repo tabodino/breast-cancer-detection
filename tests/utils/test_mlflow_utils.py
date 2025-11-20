@@ -1,5 +1,6 @@
+import os
 import time
-from src.utils import get_latest_run_id
+from src.utils.mlflow_utils import get_latest_run_id
 
 
 def test_get_latest_run_id(tmp_path):
@@ -16,9 +17,8 @@ def test_get_latest_run_id(tmp_path):
     fp2.touch()
 
     old_time = time.time() - 100
-    fp1.stat()
-    fp1.utime((old_time, old_time))
-    fp2.utime((time.time(), time.time()))
+    os.utime(fp1, (old_time, old_time))
+    os.utime(fp2, (time.time(), time.time()))
 
     assert get_latest_run_id(models_dir) == run_ids[1]
 

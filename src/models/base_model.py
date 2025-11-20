@@ -268,7 +268,7 @@ class UNetModel(BaseModel):
 def get_model(
     model_name: str,
     input_shape: Tuple[int, int, int] = (224, 224, 3),
-    num_classes: int = 2,
+    num_classes: int = 1,
 ) -> BaseModel:
     """Factory function to get model by name."""
 
