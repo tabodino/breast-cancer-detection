@@ -70,4 +70,4 @@ mlruns/
 mlflow_artifacts/
 experiments/
 tensorboard_logs/
-checkpoints/
+checkpoints/models/best_model_*_*.keras
