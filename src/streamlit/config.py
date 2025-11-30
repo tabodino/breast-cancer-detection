@@ -12,7 +12,6 @@ class AppConfig:
 
     model_type: str
     model_path: str
-    confidence_threshold: float
     enhance_contrast: bool
     show_preprocessing: bool
 

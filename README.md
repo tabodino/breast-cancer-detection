@@ -1,3 +1,7 @@
+# Breast Cancer Detection
+
+<img src="docs/screenshots/breast-cancer-detection.webp">
+
 ## 📋 Problem Statement
 
 Breast cancer is the most common form of cancer among women. Early detection is crucial for effective treatment and survival. This project aims to develop a high-performing deep learning model capable of detecting the presence of cancer from medical images.
@@ -62,9 +66,7 @@ breast-cancer-detection/
 │   │   ├── metrics.py                  # Evaluation metrics
 │   │   ├── visualization.py            # Metrics visualization
 │   │   └── __init__.py
-│   ├── streamlit/
-│   │   ├── app.py                      # Streamlit application
-│   │   └── __init__.py
+│   ├── streamlit/                      # Streamlit application                
 │   └── api/
 │       ├── main.py                     # FastAPI server
 │       └── __init__.py
@@ -81,6 +83,38 @@ breast-cancer-detection/
 ├── docker-compose.yml                  # Docker Compose
 ├── Makefile                            # Development commands
 └── tests/
+```
+
+Streamlit Application Structure
+
+```
+src/streamlit_app/
+├── __init__.py
+├── main.py                              # Main entry point
+├── config.py                            # Configuration & styling
+│
+├── components/
+│   ├── __init__.py
+│   ├── header.py                        # Header component
+│   └── sidebar.py                       # Sidebar with model selection
+│
+├── custom_pages/
+│   ├── __init__.py
+│   ├── prediction.py                    # Prediction page
+│   ├── mlflow_history.py                # History MLflow page
+│   ├── monitoring.py                    # Monitoring page
+│   ├── metrics.py                       # Metrics page
+│   └── history.py                       # History page
+│
+├── utils/
+│   ├── __init__.py
+│   ├── image_processing.py               # Image processing function tools
+│   └── visualization.py                  # Visualization function tools 
+|                    
+└── services/
+    ├── __init__.py
+    ├── storage_services.py               # Storage service logic
+    └── prediction_service.py             # Prediction service logic
 ```
 ---
 

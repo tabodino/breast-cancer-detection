@@ -53,7 +53,7 @@ class ModelTrainer:
         """Create training callbacks."""
 
         model_checkpoint = ModelCheckpoint(
-            settings.models_dir / f"best_model_{run_id}.keras",
+            settings.models_dir / f"best_model_{self.model_name}_{run_id}.keras",
             monitor="val_accuracy",
             save_best_only=True,
             mode="max",

@@ -1,58 +1,118 @@
-"""
-Sidebar component for model selection and configuration.
-"""
+"""Sidebar component for model selection and options."""
 
 import streamlit as st
-from typing import Optional
 from pathlib import Path
-from config import AppConfig
-from services.prediction_service import PredictionService
 from src.config import get_settings
 
 settings = get_settings()
-IMAGE_SIZE = settings.image_size or (224, 224)
+MODELS_DIR = Path(settings.models_dir or "models")
+
+# Available models
+AVAILABLE_MODELS = {
+    "EfficientNet B3": "efficientnet_b3",
+    "ResNet50": "resnet50",
+    "MobileNet V3": "mobilenet_v3",
+    "U-Net": "unet",
+    "Custom CNN": "cnn",
+}
 
 
-def render_sidebar() -> Optional[AppConfig]:
+def render_sidebar():
     """
-    Render sidebar with model selection and configuration.
+    Render sidebar with model selection and options.
 
     Returns:
-        AppConfig object or None if configuration is incomplete
+        tuple: (model_path, options_dict)
     """
 
     with st.sidebar:
-        st.header("⚙️ Configuration")
+        st.title("⚙️ Configuration")
 
-        interface = PredictionService()
-        available_models = interface.get_available_models()
+        # Model Selection
+        st.subheader("🤖 Model Selection")
 
-        if not available_models:
-            st.warning(
-                "No trained models found. Please train a model first using the training script."
-            )
-            return None, None
-
-        selected_model = st.selectbox(
-            "Select Model", available_models, format_func=lambda x: Path(x).stem
+        selected_model_name = st.selectbox(
+            "Choose a model",
+            options=list(AVAILABLE_MODELS.keys()),
+            help="Select the deep learning model for predictions",
+            key="model_selector",
         )
 
-        st.divider()
-        st.subheader("Model Info")
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric("Model Status", "Ready", "✓")
-        with col2:
-            st.metric("Input Size", f"{IMAGE_SIZE[0]}x{IMAGE_SIZE[1]}", "pixels")
+        model_key = AVAILABLE_MODELS[selected_model_name]
+        model_path = MODELS_DIR / f"best_{model_key}.keras"
+
+        # Model info
+        if model_path.exists():
+            size_mb = model_path.stat().st_size / (1024 * 1024)
+            st.success(f"✅ Model found ({size_mb:.1f} MB)")
+        else:
+            st.error(f"❌ Model not found: {model_path.name}")
+            st.info("Please train the model first or check the path")
+            return None, {}
 
         st.divider()
 
-        # Advanced options
-        with st.expander("Advanced Options"):
-            enhance_contrast = st.checkbox("Enhance Contrast", value=True)
-            show_preprocessing = st.checkbox("Show Preprocessing Steps", value=False)
+        # Prediction Options
+        st.subheader("🎛️ Prediction Options")
 
-        return selected_model, {
-            "enhance_contrast": enhance_contrast,
-            "show_preprocessing": show_preprocessing,
-        }
+        # Advanced options in expander
+        with st.expander("⚙️ Advanced Options"):
+            enhance_contrast = st.checkbox(
+                "Enhance Contrast",
+                value=True,
+                help="Apply histogram equalization (CLAHE)",
+            )
+
+            show_preprocessing = st.checkbox(
+                "Show Preprocessing Steps",
+                value=False,
+                help="Display before/after preprocessing",
+            )
+
+        st.divider()
+
+        # Model Information
+        with st.expander("📚 Model Information"):
+            st.markdown(f"""
+            **Selected Model:** {selected_model_name}
+            
+            **Architecture Details:**
+            - Input Size: 224×224 px
+            - Classes: 2 (Benign/Malignant)
+            - Framework: TensorFlow/Keras
+            
+            **Key:** `{model_key}`
+            """)
+
+        st.divider()
+
+        # About Section
+        st.subheader("ℹ️ About")
+        st.markdown("""
+        This application uses state-of-the-art deep learning models 
+        to detect breast cancer from histopathological images.
+        
+        **Features:**
+        - 5 different CNN architectures
+        - Real-time predictions
+        - MLflow experiment tracking
+        - Comprehensive metrics
+        """)
+
+        # Links
+        st.markdown("""
+        ---
+        **Resources:**
+        - [GitHub Repository](https://github.com/tabodino/breast-cancer-detection)
+        - [Documentation](https://github.com/tabodino/breast-cancer-detection/blob/main/README.md)
+        - [MLflow UI](http://localhost:5000)
+        """)
+
+    # Return configuration
+    options = {
+        "model_name": model_key,
+        "enhance_contrast": enhance_contrast,
+        "show_preprocessing": show_preprocessing,
+    }
+
+    return model_path, options

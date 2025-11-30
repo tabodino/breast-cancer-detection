@@ -1,84 +1,97 @@
+"""Prediction service for model loading and inference."""
+
 import streamlit as st
-from src.etl.data_loader import ImagePreprocessor
-from loguru import logger
 import numpy as np
-import tensorflow as tf
-from src.config import get_settings
+from pathlib import Path
+from tensorflow import keras
+from loguru import logger
 
-
-settings = get_settings()
-MODELS_DIR = settings.models_dir or "models"
+from utils.image_processing import preprocess_image
 
 
 class PredictionService:
-    """Handles prediction interface logic."""
+    """Service for handling model predictions."""
 
     def __init__(self):
-        self.preprocessor = ImagePreprocessor()
+        """Initialize prediction service."""
         self.model = None
         self.model_path = None
 
-    @st.cache_resource
-    def load_model(_self, model_path: str):
-        """Load model with caching."""
+    @staticmethod
+    @st.cache_resource(show_spinner=False)
+    def _load_model_cached(model_path: Path):
+        """
+        Load a Keras model with caching (static method for proper caching).
+
+        Args:
+            model_path: Path to the model file
+
+        Returns:
+            Loaded Keras model or None
+        """
         try:
-            model = tf.keras.models.load_model(model_path)
-            logger.info(f"Model loaded from {model_path}")
+            logger.info(f"Loading model from {model_path}")
+
+            # Resolve symlinks if any
+            actual_path = model_path.resolve()
+
+            if not actual_path.exists():
+                logger.error(f"Model file not found: {actual_path}")
+                return None
+
+            model = keras.models.load_model(actual_path)
+            logger.success(f"Model loaded successfully: {model_path.name}")
             return model
         except Exception as e:
-            logger.error(f"Error loading model: {e}")
-            st.error(f"Error loading model: {e}")
+            logger.error(f"Failed to load model: {e}")
+            st.error(f"Model loading error: {e}")
             return None
 
-    def get_available_models(self) -> list:
-        """Get list of available trained models."""
-        if not MODELS_DIR.exists():
-            return []
+    def load_model(self, model_path: Path):
+        """
+        Load a Keras model and store it in the service.
 
-        models = list(MODELS_DIR.glob("*.keras"))
-        return [str(m) for m in models]
+        Args:
+            model_path: Path to the model file
 
-    def preprocess_image(self, image: np.ndarray) -> np.ndarray:
-        """Preprocess image for prediction."""
-        try:
-            processed = self.preprocessor.preprocess(image, enhance_contrast=True)
-            # Add batch dimension
-            processed = np.expand_dims(processed, axis=0)
-            return processed
-        except Exception as e:
-            logger.error(f"Error preprocessing image: {e}")
-            raise
+        Returns:
+            Loaded Keras model or None
+        """
+        self.model_path = model_path
+        self.model = self._load_model_cached(model_path)
+        return self.model
 
-    def predict(self, image: np.ndarray) -> tuple:
-        """Make prediction on image."""
+    def predict(self, image: np.ndarray, enhance_contrast: bool = True):
+        """
+        Make prediction on an image.
+
+        Args:
+            image: Input image as numpy array
+            enhance_contrast: Whether to enhance contrast
+
+        Returns:
+            tuple: (class_index, confidence)
+        """
         if self.model is None:
-            st.error("No model loaded. Please select a model first.")
-            return None, None
+            raise ValueError("Model not loaded. Call load_model() first.")
 
-        try:
-            preprocessed = self.preprocess_image(image)
-            predictions = self.model.predict(preprocessed, verbose=0)
+        # Preprocess image
+        preprocessed = preprocess_image(image, enhance_contrast=enhance_contrast)
 
-            if predictions.shape[-1] == 1:
-                prob_malignant = predictions[0][0]
+        # Make prediction
+        prediction = self.model.predict(preprocessed, verbose=0)
 
-                if prob_malignant >= 0.5:
-                    class_idx = 1  # Malignant
-                    confidence = float(prob_malignant)
-                else:
-                    class_idx = 0  # Benign
-                    confidence = float(1.0 - prob_malignant)
+        # Handle binary classification
+        if prediction.shape[-1] == 1:
+            # Sigmoid output
+            confidence = float(prediction[0][0])
+            class_idx = 1 if confidence > 0.5 else 0
+            confidence = confidence if class_idx == 1 else (1 - confidence)
+        else:
+            # Softmax output
+            class_idx = int(np.argmax(prediction[0]))
+            confidence = float(prediction[0][class_idx])
 
-            elif predictions.shape[-1] == 2:
-                class_idx = np.argmax(predictions[0])
-                confidence = float(predictions[0][class_idx])
+        logger.info(f"Prediction: class={class_idx}, confidence={confidence:.3f}")
 
-            else:
-                logger.error(f"Unexpected prediction output shape: {predictions.shape}")
-                class_idx = 0
-                confidence = 0.0
-
-            return class_idx, confidence
-        except Exception as e:
-            logger.error(f"Error during prediction: {e}")
-            raise
+        return class_idx, confidence

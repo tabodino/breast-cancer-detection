@@ -69,7 +69,7 @@ class Settings(BaseSettings):
 
     # Model Training
     batch_size: int = 32
-    epochs: int = 5
+    epochs: int = 50
     learning_rate: float = 1e-4
     early_stopping_patience: int = 10
     early_stopping_min_delta: float = 1e-4
