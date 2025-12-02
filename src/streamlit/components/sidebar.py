@@ -105,7 +105,6 @@ def render_sidebar():
         **Resources:**
         - [GitHub Repository](https://github.com/tabodino/breast-cancer-detection)
         - [Documentation](https://github.com/tabodino/breast-cancer-detection/blob/main/README.md)
-        - [MLflow UI](http://localhost:5000)
         """)
 
     # Return configuration

@@ -1,6 +1,15 @@
 # Breast Cancer Detection
 
+
+[![Live Demo](https://img.shields.io/badge/_Live_Demo-Streamlit-FF4B4B?&logo=streamlit&logoColor=white)](https://breast-cancer-detection-20251130.streamlit.app/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=flat-square&logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
+[![MLflow](https://img.shields.io/badge/MLflow-Tracking-0194E2?style=flat-square&logo=mlflow&logoColor=white)](https://mlflow.org/)
+[![DVC](https://img.shields.io/badge/Data-DVC-945DD6?style=flat-square&logo=dvc&logoColor=white)](https://dvc.org/)
+
 <img src="docs/screenshots/breast-cancer-detection.webp">
+
 
 ## 📋 Problem Statement
 
@@ -172,6 +181,37 @@ cp env.example .env
 ```
 
 Edit ".env" file if needed
+
+
+## 📈 MLflow Tracking
+
+View all experiments and metrics:
+
+```bash
+mlflow ui --backend-store-uri file:./mlruns --port 5000
+```
+
+Navigate to http://localhost:5000 to explore:
+- Training metrics over time
+- Model comparisons
+- Hyperparameter tuning results
+- Artifacts and logs
+
+## 🐳 Docker Commands
+
+```bash
+# Build image
+docker build -t breast-cancer:latest .
+
+# Run container
+docker run -d -p 8501:8501 --name bc-app breast-cancer:latest
+
+# View logs
+docker logs -f bc-app
+
+# Stop and remove
+docker stop bc-app && docker rm bc-app
+```
 
 ---
 
