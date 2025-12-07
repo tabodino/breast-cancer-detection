@@ -215,6 +215,24 @@ docker stop bc-app && docker rm bc-app
 
 ---
 
+## 🚀 Run locally
+
+You can start the full stack (MLflow, FastAPI and Streamlit) with a single command using the Makefile: 
+
+```bash
+make run-all
+```
+
+This will:
+
+- launch **MLflow** for experiment tracking (default: http://localhost:5000)
+- launch the **FastAPI** server for model inference (default: http://localhost:8000)
+- launch the **Streamlit** app for interactive exploration (default: http://localhost:8501)
+
+Make sure your Python environment is set up and dependencies are installed (e.g. with `uv pip install -r pyproject.toml`) before running `make run-all`.
+
+---
+
 ## ✨ Contributing
 
 1. Fork the repository
